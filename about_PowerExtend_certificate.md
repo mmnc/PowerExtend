@@ -50,7 +50,7 @@ This helpful property in asymmetric encryption can be used for digital signing. 
 
 Certificates are all about signing. You begin by trusting a **root certificate authority (CA)**. You got to trust someone right? To do that, you save that CA's name and password `'B'` on your computer.
 
-Now a requestor (we call a *'subject'*) will ask the CA (the *'issuer'*) to sign a message (the *'certificate'*). In essense, the message says who the *subject* is, and what purpose was the *certificate* for (e.g. be the SSL certificate for a website). The *issuer* will (after getting paid, of course) sign the message and return it to the *subject*.
+Now a requester (we call a *'subject'*) will ask the CA (the *'issuer'*) to sign a message (the *'certificate'*). In essence, the message says who the *subject* is, and what purpose was the *certificate* for (e.g. be the SSL certificate for a website). The *issuer* will (after getting paid, of course) sign the message and return it to the *subject*.
 
 
 
@@ -110,7 +110,7 @@ Of course, your certificate is not included by major browsers and operating syst
 
 # The whole certificate creation workflow
 
-We're going to build a certificate hirarchy:
+We're going to build a certificate hierarchy:
 
 ```
 [-]-- TestCo Root CA
@@ -169,7 +169,7 @@ Next we create an object to hold the subject information. There are a lot of fie
 
 Then we make the certificate authority (CA) certificate using the **`New-RootCertificate`** command. Remember that a self-signed root certificate means the issuer and subject are the same person, so there is only one `Name` parameter. Also note that I'm creating an all-purpose certificate, but you'll probably want to further restrict its capability in real life.
 
-The command outputs a certificate file `testroot.pfx`. Note that the private key is embeded in the **PFX** certificate file, and is protected by the password I first set. So **keep the PFX file real safe!**
+The command outputs a certificate file `testroot.pfx`. Note that the private key is embedded in the **PFX** certificate file, and is protected by the password I first set. So **keep the PFX file real safe!**
 
 At this point, you can click on the `testroot.pfx` file in Windows Explorer and import it, but let's be hardcore and do it all from the command line.
 
