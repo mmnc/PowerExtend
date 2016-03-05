@@ -1,3 +1,26 @@
+#### Table Of Content
+
+- [What is a Certificate](#what-is-a-certificate)
+   - [How it works](#how-it-works)
+      - [How is this related to certificates](#how-is-this-related-to-certificates)
+   - [Fields in a certificate](#fields-in-a-certificate)
+      - [Name](#name)
+      - [Capability](#capability)
+      - [Specification](#specification)
+   - [Creating a self-signed certificate](#creating-a-self-signed-certificate)
+- [The whole certificate creation workflow](#the-whole-certificate-creation-workflow)
+   - [TestCo Root CA](#testco-root-ca)
+   - [TestCo Intermediate CA](#testco-intermediate-ca)
+      - [Request](#request)
+      - [Approve](#approve)
+      - [Install](#install)
+   - [End entities](#end-entities)
+- [Profit](#profit)
+   - [Profit 1](#profit-1)
+   - [Profit 2](#profit-2)
+
+------------------------------------------------------------------------------------
+
 # What is a Certificate
 
 A **Certificate** is like an identity card for the digital world. If properly implemented,
@@ -124,7 +147,7 @@ The whole tree structure makes sense if you ever lose the private key to **TestC
 
 
 
-### TestCo Root CA
+## TestCo Root CA
 
 Let's start by creating a self-signed certificate:
 
@@ -157,8 +180,9 @@ To install the CA certificate, use the **`Install-Certificate`** command. You do
 I'm installing the certificate for myself only. If you want to install the certificate for all users on the PC, you'll need to use the `LocalMachine` store and run things from an elevated terminal.
 
 
+## TestCo Intermediate CA
 
-### TestCo Intermediate CA: request
+### Request
 
 So we're now a self-proclaimed king. Let's create a subordinate certificate!
 
@@ -190,7 +214,7 @@ Now let's image me passing that file to a certificate authority through email.
 
 
 
-### TestCo Intermediate CA: approve
+### Approve
 
 Let me be the certificate authority now. I have received the request file `testsubca.req` and needs to approve it.
 
@@ -215,7 +239,7 @@ I now ships it back to the requesting subject.
 
 
 
-### TestCo Intermediate CA: install
+### Install
 
 Now back to the subject. I have received the approved certificate file (`testsubca.crt`).
 
@@ -276,7 +300,7 @@ $entities | ForEach-Object {
 }
 ```
 
-This script will create all three end entity certificates for different uses. The first one is a code signing certificate, which can be used to sign executable files and PowerShell scripts.
+This script will create all three end entity certificates (i.e. `TestCo CodeSign`, `TestCo.com` and `john@testco.com`) for different uses. The first one is a code signing certificate, which can be used to sign executable files and PowerShell scripts.
 
 The second one can be installed on a web server. Then you get SSL capabilities (the `https://` thing).
 
@@ -287,6 +311,8 @@ Then script generates a bunch of files. Be sure to secure your `.key` and `.pfx`
 After you have ran the script, you can see all the certificate in the My store (<kbd>certmgr.msc</kbd>).
 
 ------------------------------------------------------------------------------------
+
+# Profit
 
 ## Profit 1
 
