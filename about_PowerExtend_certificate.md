@@ -23,17 +23,15 @@ This helpful property in asymmetric encryption can be used for digital signing. 
 
 3. Jane saw the post and ran the maths. Sure enough, John's words were true. Since there is only one pair of `'A'` and `'B'`, John must know password `'A'` in order to encrypt the message. Assuming that nobody else knows password `'A'`, she knows that the poster must be John.
 
-## How is this related to certificates
+### How is this related to certificates
 
 Certificates are all about signing. You begin by trusting a **root certificate authority (CA)**. You got to trust someone right? To do that, you save that CA's name and password `'B'` on your computer.
 
 Now a requestor (we call a *'subject'*) will ask the CA (the *'issuer'*) to sign a message (the *'certificate'*). In essense, the message says who the *subject* is, and what purpose was the *certificate* for (e.g. be the SSL certificate for a website). The *issuer* will (after getting paid, of course) sign the message and return it to the *subject*.
 
 
-------------------------------------------------------------------------------------
 
-
-# Fields in a certificate
+## Fields in a certificate
 
 There are many fields in a certificate. We can put them into 3 broad categories:
 
@@ -41,7 +39,7 @@ There are many fields in a certificate. We can put them into 3 broad categories:
 - Capability
 - Specification
 
-## Name
+### Name
 
 This is mainly about the issuer and the subject (recipient of the certificate).
 
@@ -54,7 +52,7 @@ Note that certain fields can only support a single value (such as your DNS name,
 Most if not all commercial certification authorities charge a lot extra for SAN names. (So as to encourage you to buy more individual certificates from them?)
 
 
-## Capability
+### Capability
 
 Here we are concerned with the purpose of the certificate.
 
@@ -65,15 +63,15 @@ The **`Add-CertificateCapability`** command offers templates for different purpo
 Commercial certificates are sold on a per-purpose basis. For instance, website SSL certificates are charged less than code signing certificates. Is it because there are less codesign than webmasters customers? Kind of weird when running an executable is more risky than visiting a website.
 
 
-## Specification
+### Specification
 
 The last part is all about the maths: What cryptographic engine to use? What algorithm? How long should the keys be?
 
 
-------------------------------------------------------------------------------------
 
 
-# Creating a self-signed certificate
+
+## Creating a self-signed certificate
 
 This is a special case where the issuer is the subject.
 
@@ -126,7 +124,7 @@ The whole tree structure makes sense if you ever lose the private key to **TestC
 
 
 
-## TestCo Root CA
+### TestCo Root CA
 
 Let's start by creating a self-signed certificate:
 
@@ -140,7 +138,7 @@ $pfx | ConvertFrom-PfxCertificate -OutFile testroot.crt -OutputFormat PEM
 Install-Certificate -Path .\testroot.crt -StoreLocation CurrentUser -StoreName Root -Exportable -Password $passwd
 ```
 
-### Description
+#### Description
 
 First we create a password to protect our certificate. My password is `'casecret'`. I store in a variable called `$passwd`.
 
@@ -160,7 +158,7 @@ I'm installing the certificate for myself only. If you want to install the certi
 
 
 
-## TestCo Intermediate CA: request
+### TestCo Intermediate CA: request
 
 So we're now a self-proclaimed king. Let's create a subordinate certificate!
 
@@ -174,7 +172,7 @@ $request | Export-CertificateRequest -OutFile .\testsubca.req -Encoding Base64Re
 $priv.Delete()
 ```
 
-### Description
+#### Description
 
 First we create the subject. I made sure that it is a different name from the issuer.
 
@@ -192,7 +190,7 @@ Now let's image me passing that file to a certificate authority through email.
 
 
 
-## TestCo Intermediate CA: approve
+### TestCo Intermediate CA: approve
 
 Let me be the certificate authority now. I have received the request file `testsubca.req` and needs to approve it.
 
@@ -203,7 +201,7 @@ $approvedRequest = Approve-CertificateRequest -Signer $signCert -Request $reques
 $approvedRequest | Export-CertificateRequest .\testsubca.crt -Encoding Base64Cert -Force
 ```
 
-### Description
+#### Description
 
 We read in the certificate request file in a variable called `$request`.
 
@@ -217,7 +215,7 @@ I now ships it back to the requesting subject.
 
 
 
-## TestCo Intermediate CA: install
+### TestCo Intermediate CA: install
 
 Now back to the subject. I have received the approved certificate file (`testsubca.crt`).
 
@@ -290,7 +288,7 @@ After you have ran the script, you can see all the certificate in the My store (
 
 ------------------------------------------------------------------------------------
 
-# Profit 1
+## Profit 1
 
 I'll not be showing you how to use the web server certificate. Check out the server software documentation for more info.
 
@@ -315,9 +313,9 @@ Get-Content .\secretmsg.txt -Encoding Ascii | Unprotect-String -Certificate $cer
 
 Of course, asymmetric encryption can't keep up the pace when your data gets too big. To solve that problem, you use regular encryption techniques to protect your data with a password, then encrypt your password with a certificate. The **`Protect-File`** command does just that internally.
 
-------------------------------------------------------------------------------------
 
-# Profit 2
+
+## Profit 2
 
 Executable files can also be signed. It doesn't protect you like an antivirus program per se, but gives some assurance as to the author of the file.
 
